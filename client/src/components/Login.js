@@ -1,89 +1,93 @@
-import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGooglePlusG, faFacebookF, faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
-import './Login.css'; // Import your CSS file
+import React, { useState } from 'react';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import './Login.css';
+import { useNavigate } from 'react-router-dom';
 
-class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isSignIn: true
+import { Link } from 'react-router-dom';
+
+const Login = () => {
+
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const loginUser = async (e) => {
+        e.preventDefault();
+    
+        // console.log("Logging in...");
+        
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email, password
+            })
         };
+    
+        // console.log("Request Options:", requestOptions);
+    
+        try {
+            const res = await fetch("/signin", requestOptions);
+    
+    
+            const data = await res.json();
+            
+            // console.log("Response Data:", data);
+    
+            if (data.status === 400 || !data || data.error) {
+                window.alert("Invalid credentials");
+            } else {
+                window.alert("Login Successful");
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            // window.alert("An error occurred while logging in");
+        }
     }
+    
 
-    handleToggle = () => {
-        this.setState(prevState => ({
-            isSignIn: !prevState.isSignIn
-        }));
-    };
 
-    render() {
-        const { isSignIn } = this.state;
-        return (
-            <div className='login-singup-wrapper-1'>
-                <div className={`login-singup-wrapper-2 ${isSignIn ? 'active' : ''}`} id="container">
-                    <div className="form-container sign-up">
-                        <form>
-                            <h2>Create Account</h2>
-                            {/* <div className="social-icons">
-                                <a href="#" className="icon"><FontAwesomeIcon icon={faGooglePlusG} /></a>
-                                <a href="#" className="icon"><FontAwesomeIcon icon={faFacebookF} /></a>
-                                <a href="#" className="icon"><FontAwesomeIcon icon={faGithub} /></a>
-                                <a href="#" className="icon"><FontAwesomeIcon icon={faLinkedinIn} /></a>
-                            </div> */}
-                            {/* <span>or use your email for registeration</span> */}
-                            <input type="text" placeholder="Name" />
-                            <input type="email" placeholder="Email" />
-                            <input type="password" placeholder="Password" />
-                            <input type="tel" placeholder="Mobile Number" />
-                            <input type="date" placeholder="Birth Date" />
-                            <div className='gender-field'>
-                                <label for="gender">Gender :</label>
-                                <select id="gender" name="gender">
-                                    <option value="">Select Gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
+    return (
 
-                            <button>Sign Up</button>
-                        </form>
-                    </div>
-                    <div className="form-container sign-in">
-                        <form>
-                            <h2>Sign In</h2>
-                            <div className="social-icons">
-                                <a href="#" className="icon"><FontAwesomeIcon icon={faGooglePlusG} /></a>
-                                <a href="#" className="icon"><FontAwesomeIcon icon={faFacebookF} /></a>
-                                <a href="#" className="icon"><FontAwesomeIcon icon={faGithub} /></a>
-                                <a href="#" className="icon"><FontAwesomeIcon icon={faLinkedinIn} /></a>
-                            </div>
-                            <span>or use your email password</span>
-                            <input type="email" placeholder="Email" />
-                            <input type="password" placeholder="Password" />
-                            <a href="#">Forget Your Password?</a>
-                            <button>Sign In</button>
-                        </form>
-                    </div>
-                    <div className="toggle-container">
-                        <div className="toggle">
-                            <div className={`toggle-panel toggle-left ${isSignIn ? 'active' : ''}`}>
-                                <h1>Welcome Back!</h1>
-                                <p>Enter your personal details to use all of site features</p>
-                                <button className="hidden" id="login" onClick={this.handleToggle}>Sign In</button>
-                            </div>
-                            <div className={`toggle-panel toggle-right ${!isSignIn ? 'active' : ''}`}>
-                                <h1>Hello, Friend!</h1>
-                                <p>Register with your personal details to use all of site features</p>
-                                <button className="hidden" id="register" onClick={this.handleToggle}>Sign Up</button>
-                            </div>
+
+        <div className='login-singup-wrapper-1'>
+            <div className='login-singup-wrapper-2 active' id="container">
+                <div className="form-container sign-in">
+                    <form method='POST'>
+                        <h2>Sign In</h2>
+                        <span>use your email and password</span>
+                        <input type='email' name='email' id='email' autoComplete='off'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder='Email'
+                        />
+                        <input type='password' name='password' id='password' autoComplete='off'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder='Password'
+                        />
+                        <input type='submit' name='signin' id='signin'
+                            value='Signin'
+                            onClick={loginUser}
+                        />
+                    </form>
+                </div>
+                <div className="toggle-container">
+                    <div className="toggle">
+                        <div className='toggle-panel toggle-left'>
+                            <h1>Welcome Back!</h1>
+                            <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
                         </div>
                     </div>
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
+
 }
 
 export default Login;
