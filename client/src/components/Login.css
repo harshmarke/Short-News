@@ -84,6 +84,7 @@
     border-radius: 8px;
     width: 100%;
     outline: none;
+    border: 2px solid black;
 }
 
 .login-singup-wrapper-2 .gender-field{

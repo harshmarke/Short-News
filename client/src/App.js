@@ -8,6 +8,7 @@ import Login from './components/Login';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import SignUp from './components/SignUp';
 
 
 
@@ -73,6 +74,7 @@ export default class App extends Component {
           <Route path="/sports" element={<News setProgress={this.setProgress} key="sports" apikey={this.apikey} category="sports" />}></Route>
           <Route path="/technology" element={<News setProgress={this.setProgress} key="technology" apikey={this.apikey} category="technology" />}></Route>
           <Route path="/login" element={<Login />} />
+          <Route path='/signup' element={<SignUp />} />
 
         </Routes>
 
